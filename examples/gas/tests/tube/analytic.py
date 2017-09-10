@@ -42,6 +42,7 @@
 #
 
 import scipy.optimize as so
+import argparse
 
 # a number to claim two floating number value are equal.
 delta_precision = 0.0000000000001
@@ -49,7 +50,7 @@ delta_precision = 0.0000000000001
 
 class Sod1D(object):
     """
-    The core to generate the 1D Sod tube test
+    The core object to generate the 1D Sod tube test
     """
 
     def __init__(self):
@@ -74,16 +75,6 @@ class Sod1D(object):
         self.GAMMA2 = (self.GAMMA - 1.0) / (self.GAMMA + 1.0)
         self.ALPHA = (self.GAMMA + 1.0) / (self.GAMMA - 1.0)
         self.BETA = (self.GAMMA - 1.0) / (2.0 * self.GAMMA)
-        # a mesh, which has this format:
-        # [point0, point1, point2, point3, ......, pointn]
-        self.mesh = []
-        # solution has this format:
-        # [(x0, rho0, u0, p0),
-        #  (x1, rho1, u1, p1),
-        #  ......,
-        #  (xn, rhon, un, pn)]
-        self.solution = []
-        self.ceseparameters = []
 
     def get_initcondition(self):
         return self.initcondition
@@ -91,14 +82,33 @@ class Sod1D(object):
     def set_initcondition(self, initcondition):
         self.initcondition = initcondition
 
-    def get_analytic_solution(self, mesh, t=0.2):
+    def set_solution(self, solution,
+                     center=0.0, coor_x=0.0, time=0.0,
+                     density=0.0, velocity=0.0, pressure=0.0):
+        solution['center'] = center
+        solution['x'] = coor_x
+        solution['time'] = time
+        solution['rho'] = density
+        solution['v'] = velocity
+        solution['p'] = pressure
+
+    def set_solution_interface(self, solution, i12, i23, i34, i45):
+        solution['I12'] = i12
+        solution['I23'] = i23
+        solution['I34'] = i34
+        solution['I45'] = i45
+
+    def get_analytic_solution(self, time, coor_x, center=0.0):
         """
         Get analytic solutions by giving locations (mesh) and time.
 
-        :param mesh: iterable, usually a list or tuple of location.
-        :param t: time
+        :param coor_x float, x coordinate value.
+        :param time: float, time
+        :parem center: float, the coordinate of center
         :return: a list of solution. Each element is (time, rho, v, p)
         """
+        location = coor_x - center
+
         rho4 = self.get_analytic_density_region4()
         u4 = self.get_analytic_velocity_region4()
         p4 = self.get_analytic_pressure_region4()
@@ -107,43 +117,52 @@ class Sod1D(object):
         u3 = self.get_analytic_velocity_region3()
         p3 = self.get_analytic_pressure_region3()
 
-        x_shock = self.get_velocity_shock() * t
-        x_disconti = u3 * t
-        x_fan_right = self.get_velocity_fan_right() * t
-        x_fan_left = self.get_velocity_fan_left() * t
+        x_shock = self.get_velocity_shock() * time
+        x_disconti = u3 * time
+        x_fan_right = self.get_velocity_fan_right() * time
+        x_fan_left = self.get_velocity_fan_left() * time
 
-        solution = []
-        for x in mesh:
-            if x < x_fan_left or x == x_fan_left:
-                solution.append((x,
-                                 self.get_density_region1(),
-                                 self.get_velocity_region1(),
-                                 self.get_pressure_region1()))
-            elif x > x_fan_left and (x < x_fan_right or x == x_fan_right):
-                d = self.get_analytic_density_region2(float(x), t)
-                v = self.get_analytic_velocity_region2(float(x), t)
-                p = self.get_analytic_pressure_region2(float(x), t)
-                solution.append((x,
-                                 d,
-                                 v,
-                                 p))
-            elif x > x_fan_right and (x < x_disconti or x == x_disconti):
-                solution.append((x,
-                                 rho3,
-                                 u3,
-                                 p3))
-            elif x > x_disconti and (x < x_shock or x == x_shock):
-                solution.append((x,
-                                 rho4,
-                                 u4,
-                                 p4))
-            elif x > x_shock:
-                solution.append((x,
-                                 self.get_density_region5(),
-                                 self.get_velocity_region5(),
-                                 self.get_pressure_region5()))
-            else:
-                print("Something wrong!!!")
+        solution = {"rho": None, "v": None, "p": None}
+
+        if location < x_fan_left or location == x_fan_left:
+            self.set_solution(solution,
+                              center, coor_x, time,
+                              self.get_density_region1(),
+                              self.get_velocity_region1(),
+                              self.get_pressure_region1())
+
+        elif location > x_fan_left and\
+                (location < x_fan_right or location == x_fan_right):
+            d = self.get_analytic_density_region2(location, time)
+            v = self.get_analytic_velocity_region2(location, time)
+            p = self.get_analytic_pressure_region2(location, time)
+            self.set_solution(solution,
+                              center, coor_x, time,
+                              d, v, p)
+        elif location > x_fan_right and\
+                (location < x_disconti or location == x_disconti):
+            self.set_solution(solution,
+                              center, coor_x, time,
+                              rho3, u3, p3)
+        elif location > x_disconti and\
+                (location < x_shock or location == x_shock):
+            self.set_solution(solution,
+                              center, coor_x, time,
+                              rho4, u4, p4)
+        elif location > x_shock:
+            self.set_solution(solution,
+                              center, coor_x, time,
+                              self.get_density_region5(),
+                              self.get_velocity_region5(),
+                              self.get_pressure_region5())
+        else:
+            print("Something wrong!!!")
+
+        self.set_solution_interface(solution,
+                                    x_fan_left,
+                                    x_fan_right,
+                                    x_disconti,
+                                    x_shock)
 
         return solution
 
@@ -306,3 +325,61 @@ class Sod1D(object):
 
     def get_density_region5(self):
         return self.RHOR
+
+
+def get_solution(time, coor_x, coor_center=0.0):
+    """
+    Get analytic solution.
+
+    This method returns not only the values of the usual physics quantities,
+    but also the location of regions. The region information is useful for
+    users to know where the discontinutity is.
+
+    :param t: float, time
+    :param location: float, location. In this 1D case, x coordinate value.
+    :param tube_length: float
+    :param center_location: flaot
+    :return: solution object, I12 mean interface between region 1 and 2 etc.
+
+             {
+             "center": float coordinate,
+             "x": float coordinate,
+             "time": float t,
+             "rho": float rho,
+             "v": float v,
+             "p": float p,
+             "I12": float coordinate,
+             "I23": float coordinate,
+             "I34": float coordinate,
+             "I45": float coordinate
+             }
+
+             I12 is actually fan_left location
+             I23 is actually fan_right location
+             I34 is actually x_discontinutity location
+             I45 is actually x_shock location
+    """
+    sod = Sod1D()
+    return sod.get_analytic_solution(time, coor_x, coor_center)
+
+
+if __name__ == '__main__':
+    # TODO: handling args and delegate the algorithm to get_solution
+    # arguments
+    #   general: time, location center_location
+    #   level: simple (physics quantity only)
+    #          default (physics quantity and interface location)
+    #   format: default (tuple for simple and dict for default lovel)
+    #           json
+    # return get_solution(time, location, center_location)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('time', type=float,
+                        help="The value of the time.")
+    parser.add_argument('coor_x', type=float,
+                        help="The value of x coordinate.")
+    parser.add_argument('-c', '--center', type=float, default=0.0, required=False,
+                        help="The value of the center coordinate. The default is 0.")
+
+    args = parser.parse_args()
+
+    print(get_solution(args.time, args.coor_x, args.center))
