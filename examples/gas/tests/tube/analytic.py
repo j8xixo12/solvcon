@@ -195,10 +195,11 @@ class Sod1D(object):
         c5 = self.get_velocity_c5()
         beta = self.BETA
         gamma = self.GAMMA
-        return ((x / p1) - \
-                ((1.0 - \
-                  ((gamma - 1.0) * c5 * ((x / p5) - 1.0)) / \
-                  (c1 * ((2.0 * gamma * (gamma - 1.0 + (gamma + 1.0) * (x / p5))) ** 0.5)) \
+        return ((x / p1) -
+                ((1.0 -
+                  ((gamma - 1.0) * c5 * ((x / p5) - 1.0)) /
+                  (c1 * ((2.0 * gamma *
+                          (gamma - 1.0 + (gamma + 1.0) * (x / p5))) ** 0.5))
                   ) ** (1.0 / beta))
                 )
 
@@ -220,7 +221,8 @@ class Sod1D(object):
         gamma = self.GAMMA
         p4 = self.get_analytic_pressure_region4()  # 0.3031
         p5 = self.get_pressure_region5()  # 0.1
-        return c5 * ((1.0 + (((gamma + 1.0) * ((p4 / p5) - 1.0)) / (2.0 * gamma))) ** 0.5)
+        return c5 * ((1.0 + (((gamma + 1.0) *
+                              ((p4 / p5) - 1.0)) / (2.0 * gamma))) ** 0.5)
 
     def get_velocity_c1(self):
         return (self.GAMMA * self.PL / self.RHOL) ** 0.5
@@ -255,7 +257,8 @@ class Sod1D(object):
         p5 = self.get_pressure_region5()
         p = p4 / p5
         c5 = self.get_velocity_c5()
-        return c5 * (p - 1.0) * (2.0 / (gamma * (gamma - 1.0 + (gamma + 1.0) * p))) ** 0.5
+        return c5 * (p - 1.0) *\
+                    (2.0 / (gamma * (gamma - 1.0 + (gamma + 1.0) * p))) ** 0.5
 
     def get_velocity_region5(self):
         return self.UR
@@ -335,10 +338,9 @@ def get_solution(time, coor_x, coor_center=0.0):
     but also the location of regions. The region information is useful for
     users to know where the discontinutity is.
 
-    :param t: float, time
-    :param location: float, location. In this 1D case, x coordinate value.
-    :param tube_length: float
-    :param center_location: flaot
+    :param time: float, time
+    :param coor_x: float, location. In this 1D case, x coordinate value.
+    :param coor_center: flaot
     :return: solution object, I12 mean interface between region 1 and 2 etc.
 
              {
@@ -377,8 +379,10 @@ if __name__ == '__main__':
                         help="The value of the time.")
     parser.add_argument('coor_x', type=float,
                         help="The value of x coordinate.")
-    parser.add_argument('-c', '--center', type=float, default=0.0, required=False,
-                        help="The value of the center coordinate. The default is 0.")
+    parser.add_argument('-c', '--center', type=float,
+                        default=0.0, required=False,
+                        help="The value of the center coordinate."
+                             "The default is 0.")
 
     args = parser.parse_args()
 
