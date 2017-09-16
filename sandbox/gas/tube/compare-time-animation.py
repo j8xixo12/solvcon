@@ -67,29 +67,6 @@ def load_from_np(filename, arr_idx_der):
     return arr_t, arr_der
 
 
-def load_from_analytic(location, arr_time, arr_idx_der):
-    # load analytic solution data of 1D tube
-    # note the coordination of analytic solution is different from
-    # the one that SOLVCON used.
-    mesh_1d = (location,)
-    analytic_solver = analytic.Solver()
-    # parse the analytic data object to be arr type data object
-    vals = list()
-    for t_step in arr_time:
-        solution_analytic = analytic_solver.get_analytic_solution(mesh_1d,
-                                                                  t=t_step)
-        # refer to gas probe.py:Probe::__call__
-        vlist = [t_step, solution_analytic[0][1], solution_analytic[0][3]]
-        vals.append(vlist)
-    arr_aly = np.array(vals, dtype='float64')
-    # parsed.
-
-    arr_aly_t = arr_time
-    arr_aly_der = arr_aly[:, arr_idx_der]
-
-    return arr_aly_t, arr_aly_der
-
-
 def get_deviation(numeric, analytic):
     deviation = list()
     for index in xrange(len(numeric)):
