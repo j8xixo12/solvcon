@@ -98,6 +98,25 @@ class Sod1D(object):
         solution['I34'] = i34
         solution['I45'] = i45
 
+    def translation_coor_by_center(self, solution, center):
+        """
+        Shift the solution coordinate values
+        to associate its specified center.
+
+        :param solution: solution object (dict)
+        :param center: float
+        :return: solution
+        """
+        solution['center'] = center
+        solution['x'] = solution['x'] - center
+        solution['I12'] = solution['I12'] - center
+        solution['I23'] = solution['I23'] - center
+        solution['I34'] = solution['I34'] - center
+        solution['I45'] = solution['I45'] - center
+        print(solution['I45'])
+
+        return solution
+
     def get_analytic_solution(self, time, coor_x, center=0.0):
         """
         Get analytic solutions by giving locations (mesh) and time.
@@ -163,6 +182,8 @@ class Sod1D(object):
                                     x_fan_right,
                                     x_disconti,
                                     x_shock)
+
+        solution = self.translation_coor_by_center(solution, center)
 
         return solution
 
