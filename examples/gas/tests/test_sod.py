@@ -41,3 +41,6 @@ class TestGas(TestCase):
 
     def test_sod_tube_by_snapshot(self):
         self.assertTrue(sod.compare_probe_data_by_snapshot())
+
+    def test_sod_tube_exclude_dis_interface(self):
+        self.assertTrue(sod.compare_probe_data_exclude_dis_interface())

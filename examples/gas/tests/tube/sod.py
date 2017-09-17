@@ -375,6 +375,41 @@ def compare_probe_data_by_snapshot(tolerance=2.0e-2):
     return True
 
 
+def compare_probe_data_exclude_dis_interface(tolerance=2.0e-5, exclude_dis=0.05):
+    points_target = load_from_np(DIR_DATA)
+    points_base = load_from_analytic(points_target)
+
+    locations = []
+    # Get coordinate values of points
+    for idx in range(len(points_target)):
+        locations.append(idx/float(len(points_target)))
+    sod = Sod1D()
+
+    all_point_number = len(points_target)
+    for idx_point in range(all_point_number):
+        point = points_base[idx_point]
+        location = locations[idx_point]
+        for idx_stride_step in range(len(point)):
+            for idx_derived in range(1,4):
+                target = points_target[idx_point][idx_stride_step][idx_derived]
+                base = points_base[idx_point][idx_stride_step][idx_derived]
+
+            ana_sol = sod.get_analytic_solution(points_target[idx_point][idx_stride_step][0], location, 0.5)
+
+            # if this point is nearby the discontinuous interface, sktip to compare it.
+            if not (location - ana_sol['I12'] < exclude_dis or
+                    location - ana_sol['I23'] < exclude_dis or
+                    location - ana_sol['I34'] < exclude_dis or
+                    location - ana_sol['I45'] < exclude_dis):
+
+                delta = target - base
+                if math.fabs(delta) > tolerance:
+                    print("%i %i %f %f %f" % (idx_point, idx_derived, target, base, delta))
+                    return False
+
+    return True
+
+
 def run():
     from solvcon.batch import batregy
     from solvcon import domain
