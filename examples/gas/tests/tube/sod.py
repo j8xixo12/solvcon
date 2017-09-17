@@ -273,21 +273,34 @@ def load_from_np(data_path=DIR_DATA):
 
 
 def load_from_analytic(points_target):
+    """
+    Load associated data followed by points_target.
+
+    :param points_target: point array. A point is a list of elements ndarray(time, rho, v, p)
+    :return: analytic point object list
+    """
     points_base = []
     locations = []
+    # Get coordinate values of points
     for idx in range(len(points_target)):
-        locations.append(idx/float(len(points_target)) - 0.5)
+        locations.append(idx/float(len(points_target)))
 
+    # Get all time steps of the numeric solution.
+    # For different points at diff locations,
+    # they all have the same time step list.
+    # So we could only use the time step list of arbitrary points.
     list_time = []
     for data in points_target[0]:
         list_time.append(data[0])
 
     sod = Sod1D()
-    for idx in range(len(points_target)):
+    for location in locations:
         point_by_time = []
         for time in list_time:
-            analytic = sod.get_analytic_solution((locations[idx],), t=time)[0]
-            point_by_time.append([time, analytic[1], analytic[2], analytic[3]])
+            # please note the numeric center is at 0.5
+            # so we want to get the analytic solution with its center at 0.5
+            analytic = sod.get_analytic_solution(time, location, 0.5)
+            point_by_time.append([time, analytic['rho'], analytic['v'], analytic['p']])
         points_base.append(point_by_time)
 
     return points_base
@@ -360,6 +373,7 @@ def compare_probe_data_by_snapshot(tolerance=2.0e-2):
                 return False
 
     return True
+
 
 def run():
     from solvcon.batch import batregy
