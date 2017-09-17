@@ -113,7 +113,6 @@ class Sod1D(object):
         solution['I23'] = solution['I23'] - center
         solution['I34'] = solution['I34'] - center
         solution['I45'] = solution['I45'] - center
-        print(solution['I45'])
 
         return solution
 
