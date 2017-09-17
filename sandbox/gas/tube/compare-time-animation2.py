@@ -116,16 +116,22 @@ def der_plot(step, der_index, base_subplot_idx):
     # shift locations so we could input it in analytic coordination.
     locations_aly = []
     for location in locations:
-        location_aly = location - 0.5
-        locations_aly.append(location_aly)
+        locations_aly.append(location)
 
     # Now we have been ready to input all location that we want to plot.
     # Prepare the solution array from analytic solution objects.
     analytic_solution = []
     for location in locations_aly:
-        sol_obj = analytic.get_solution(arr_t[step], location)
+        sol_obj = analytic.get_solution(arr_t[step], location, 0.5)
         sol = [location, sol_obj["rho"], sol_obj["v"], sol_obj["p"]]
         analytic_solution.append(sol)
+
+    # sanity locations to make sure the coordination translation of
+    # analytic center is correct
+    for idx in range(len(locations_aly)):
+        if locations_aly[idx] != analytic_solution[idx][0]:
+            print("center coordinate translation is incoorect.")
+            break
 
     data_der_analytic = []
     for location_idx in range(len(locations)):

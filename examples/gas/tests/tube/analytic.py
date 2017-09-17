@@ -108,11 +108,11 @@ class Sod1D(object):
         :return: solution
         """
         solution['center'] = center
-        solution['x'] = solution['x'] - center
-        solution['I12'] = solution['I12'] - center
-        solution['I23'] = solution['I23'] - center
-        solution['I34'] = solution['I34'] - center
-        solution['I45'] = solution['I45'] - center
+        solution['x'] = solution['x'] + center
+        solution['I12'] = solution['I12'] + center
+        solution['I23'] = solution['I23'] + center
+        solution['I34'] = solution['I34'] + center
+        solution['I45'] = solution['I45'] + center
 
         return solution
 
