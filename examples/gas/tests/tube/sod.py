@@ -401,12 +401,15 @@ def compare_probe_data_exclude_dis_interface(tolerance=1.0e-2, exclude_dis=0.02)
 
                 # TODO: we gave larger tolerance for pressure according to comparison plot
                 # This constrain should not be used once we get more accurate results.
+                # These constrain values are derived from trial and error.
                 if (math.fabs(location - ana_sol['I12']) < 0.025) and idx_derived == 3:
-                    #print("Got a TODO point")
-                    #print("%i\t%i\t%f\t%f" % (idx_stride_step, idx_point, point[idx_stride_step][0], locations[idx_point]))
-                    #print("%i\t%f\t%f\t%f" % (idx_derived, target, base, delta))
-
-                    tolerance = 0.28
+                    # Give larger tolerance at the very beginning
+                    if idx_stride_step < 16:
+                        tolerance = 0.28
+                    elif idx_stride_step > 15 and idx_stride_step < 26:
+                        tolerance = 0.25
+                    else:
+                        tolerance = 0.21
 
                 delta = target - base
                 if math.fabs(delta) > tolerance:
