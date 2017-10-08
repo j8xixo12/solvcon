@@ -34,6 +34,7 @@ import tempfile
 import fnmatch
 import math
 import numpy as np  # http://www.numpy.org
+import numpy.testing as npt
 import solvcon as sc  # SOLVCON
 from solvcon.conf import env
 from solvcon.parcel import gas  # A specific SOLVCON solver package we'll use
@@ -376,6 +377,13 @@ def compare_probe_data_by_snapshot(tolerance=2.0e-2):
 
 
 def compare_probe_data_exclude_dis_interface(tolerance=1.0e-2, exclude_dis=0.02):
+    """
+    Compare the data which is not nearby the discontinuous interface.
+
+    :param tolerance: float, will be rtol of numpy.testing.all_close
+    :param exclude_dis: float, how far is the so-called 'nearby' the discontinuity.
+    :return: Boolean for test case judgement.
+    """
     points_target = load_from_np(DIR_DATA)
     points_base = load_from_analytic(points_target)
 
