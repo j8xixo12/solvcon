@@ -16,9 +16,7 @@ SOLVCON implements conservation-law solvers that use the space-time
   :target: http://doc.solvcon.net/en/latest/
   :alt: Documentation Status
 
-.. |singularity_status| image:: 
-  :target: 
-  :alt: Singularity Status
+[![https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg](https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg)](https://singularity-hub.org/collections/1679)
 
 Install
 =======
