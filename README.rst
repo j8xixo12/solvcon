@@ -2,7 +2,7 @@ SOLVCON implements conservation-law solvers that use the space-time
 `Conservation Element and Solution Element (CESE) method
 <http://www.grc.nasa.gov/WWW/microbus/>`__.
 
-|travis_status| |gitlab_status| |rtd_status|
+|travis_status| |gitlab_status| |rtd_status| |singularity_status|
 
 .. |travis_status| image:: https://travis-ci.org/solvcon/solvcon.svg?branch=master
   :target: https://travis-ci.org/solvcon/solvcon
@@ -15,6 +15,10 @@ SOLVCON implements conservation-law solvers that use the space-time
 .. |rtd_status| image:: https://readthedocs.org/projects/solvcon/badge/?version=latest
   :target: http://doc.solvcon.net/en/latest/
   :alt: Documentation Status
+
+.. |singularity_status| image:: 
+  :target: 
+  :alt: Singularity Status
 
 Install
 =======
