@@ -33,6 +33,18 @@ jobs:
                 libnetcdf-dev libscotch-6.0 libscotch-dev cython3 python3 \
                 python3-numpy libpython3.6-dev python3-boto python3-paramiko graphviz
 
+    - name: dependency (devenv)
+      run: |
+        git clone https://github.com/solvcon/devenv.git
+        source ${GITHUB_WORKSPACE}/devenv/scripts/init
+        devenv add prime
+        devenv use prime
+        devenv show
+        VERSION=gmsh_3_0_6 devenv build gmsh
+        # needed when building python by devenv
+        devenv build openssl
+        VERSION=3.8 devenv build python
+
     - name: dependency (conda)
       run: |
         if [[ "$(uname)" == "Darwin" ]]; then
@@ -70,6 +82,9 @@ jobs:
 
     - name: show dependency
       run: |
+        source ${GITHUB_WORKSPACE}/devenv/scripts/init
+        devenv use prime
+        devenv show
         source ${GITHUB_WORKSPACE}/build/env/start
         export
         which gcc
@@ -82,5 +97,8 @@ jobs:
 
     - name: test from package
       run: |
+        source ${GITHUB_WORKSPACE}/devenv/scripts/init
+        devenv use prime
+        devenv show
         source ${GITHUB_WORKSPACE}/build/env/start
         make SC_PURE_PYTHON=1 test_from_package
