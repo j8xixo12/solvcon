@@ -91,5 +91,7 @@ jobs:
 
     - name: test from package
       run: |
+        devenv use prime
+        devenv show
         source ${GITHUB_WORKSPACE}/build/env/start
         make SC_PURE_PYTHON=1 test_from_package
