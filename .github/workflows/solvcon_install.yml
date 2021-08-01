@@ -36,7 +36,7 @@ jobs:
     - name: dependency (devenv)
       run: |
         git clone https://github.com/solvcon/devenv.git
-        source ./devenv/scripts/init
+        source ${GITHUB_WORKSPACE}/devenv/scripts/init
         devenv add prime
         devenv use prime
         devenv show
@@ -91,6 +91,7 @@ jobs:
 
     - name: test from package
       run: |
+        source ${GITHUB_WORKSPACE}/devenv/scripts/init
         devenv use prime
         devenv show
         source ${GITHUB_WORKSPACE}/build/env/start
