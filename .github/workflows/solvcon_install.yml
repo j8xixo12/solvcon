@@ -33,6 +33,15 @@ jobs:
                 libnetcdf-dev libscotch-6.0 libscotch-dev cython3 python3 \
                 python3-numpy libpython3.6-dev python3-boto python3-paramiko graphviz
 
+    - name: dependency (devenv)
+      run: |
+        git clone https://github.com/solvcon/devenv.git
+        source ./devenv/scripts/init
+        devenv add prime
+        devenv use prime
+        devenv show
+        VERSION=gmsh_3_0_6 devenv build gmsh
+
     - name: dependency (conda)
       run: |
         if [[ "$(uname)" == "Darwin" ]]; then
