@@ -79,6 +79,9 @@ jobs:
 
     - name: show dependency
       run: |
+        source ${GITHUB_WORKSPACE}/devenv/scripts/init
+        devenv use prime
+        devenv show
         source ${GITHUB_WORKSPACE}/build/env/start
         export
         which gcc
