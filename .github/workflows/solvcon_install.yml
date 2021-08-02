@@ -41,6 +41,7 @@ jobs:
         devenv use prime
         devenv show
         VERSION=gmsh_3_0_6 devenv build gmsh
+        devenv build numpy
 
     - name: dependency (conda)
       run: |
