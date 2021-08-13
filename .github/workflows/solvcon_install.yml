@@ -43,7 +43,7 @@ jobs:
         VERSION=gmsh_3_0_6 devenv build gmsh
         # needed when building python by devenv
         devenv build openssl
-        devenv build python
+        VERSION=3.8 devenv build python
 
     - name: dependency (conda)
       run: |
