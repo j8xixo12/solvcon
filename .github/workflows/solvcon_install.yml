@@ -41,6 +41,9 @@ jobs:
         devenv use prime
         devenv show
         VERSION=gmsh_3_0_6 devenv build gmsh
+        # needed when building python by devenv
+        devenv build openssl
+        devenv build python
 
     - name: dependency (conda)
       run: |
