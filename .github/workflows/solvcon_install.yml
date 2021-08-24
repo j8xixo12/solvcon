@@ -40,9 +40,33 @@ jobs:
         devenv add prime
         devenv use prime
         devenv show
-        VERSION=gmsh_3_0_6 devenv build gmsh
+        mkdir -p ${GITHUB_WORKSPACE}/devenv/flavors/prime/usr/bin
+        VERSION=3.0.6 devenv build gmsh
+        # debugging info
+        echo == prime ==
+        ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/
+        echo == prime/usr ==
+        ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/usr
+        echo == prime/usr/bin ==
+        ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/usr/bin
+
+        echo == prime/usr/bin/gmsh ==
+        ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/usr/bin/gmsh
+
         # needed when building python by devenv
         devenv build openssl
+        # debugging info
+        echo == prime ==
+        ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/
+        echo == prime/usr ==
+        ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/usr
+        echo == prime/usr/bin ==
+        ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/usr/bin
+        echo == prime/usr/lib ==
+        ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/usr/lib
+        echo == prime/usr/include/openssl ==
+        ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/usr/include/openssl
+
         VERSION=3.8 devenv build python
 
     - name: dependency (conda)
@@ -94,6 +118,24 @@ jobs:
         which python3
         python3 --version
         python3 -c 'import numpy ; print("numpy.__version__:", numpy.__version__)'
+        which gmsh
+
+    - name: show python env
+      run: |
+        source ${GITHUB_WORKSPACE}/devenv/scripts/init
+        devenv use prime
+        devenv show
+        source ${GITHUB_WORKSPACE}/build/env/start
+        which python3
+        python3 --version
+        python3 -c 'import numpy ; print("numpy.__version__:", numpy.__version__)'
+        python3 -c 'import sys ; print(sys.path)'
+        echo "==============="
+        echo "python globals:"
+        python3 -c 'import numpy, solvcon ; print(globals())'
+        echo "==============="
+        echo "python locals:"
+        python3 -c 'import numpy, solvcon ; print(locals())'
 
     - name: test from package
       run: |
