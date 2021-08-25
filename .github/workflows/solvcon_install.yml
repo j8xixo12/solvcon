@@ -107,10 +107,10 @@ jobs:
         python3 -c 'import sys ; print(sys.path)'
         echo "==============="
         echo "python globals:"
-        python3 -c 'import numpy ; print(globals())'
+        python3 -c 'import numpy, solvcon ; print(globals())'
         echo "==============="
         echo "python locals:"
-        python3 -c 'import numpy ; print(locals())'
+        python3 -c 'import numpy, solvcon ; print(locals())'
 
     - name: test from package
       run: |
