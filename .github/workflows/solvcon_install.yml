@@ -41,6 +41,10 @@ jobs:
         devenv use prime
         devenv show
         VERSION=gmsh_3_0_6 devenv build gmsh
+        ls /home/runner/work/solvcon/solvcon/devenv/flavors/prime/
+        ls /home/runner/work/solvcon/solvcon/devenv/flavors/prime/usr
+        ls /home/runner/work/solvcon/solvcon/devenv/flavors/prime/usr/bin
+        ls /home/runner/work/solvcon/solvcon/devenv/flavors/prime/usr/bin/gmsh
         # needed when building python by devenv
         devenv build openssl
         VERSION=3.8 devenv build python
