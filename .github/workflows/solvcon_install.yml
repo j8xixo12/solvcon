@@ -42,16 +42,29 @@ jobs:
         devenv show
         mkdir -p ${GITHUB_WORKSPACE}/devenv/flavors/prime/usr/bin
         VERSION=3.0.6 devenv build gmsh
+        # debugging info
         echo == prime ==
         ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/
         echo == prime/usr ==
         ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/usr
         echo == prime/usr/bin ==
         ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/usr/bin
+
         echo == prime/usr/bin/gmsh ==
         ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/usr/bin/gmsh
+
         # needed when building python by devenv
         devenv build openssl
+        # debugging info
+        echo == prime ==
+        ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/
+        echo == prime/usr ==
+        ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/usr
+        echo == prime/usr/bin ==
+        ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/usr/bin
+        echo == prime/usr/lib ==
+        ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/usr/lib
+
         VERSION=3.8 devenv build python
 
     - name: dependency (conda)
