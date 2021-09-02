@@ -64,6 +64,8 @@ jobs:
         ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/usr/bin
         echo == prime/usr/lib ==
         ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/usr/lib
+        echo == prime/usr/openssl ==
+        ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/usr/openssl
 
         VERSION=3.8 devenv build python
 
