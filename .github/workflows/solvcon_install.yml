@@ -41,7 +41,7 @@ jobs:
         devenv use prime
         devenv show
         mkdir -p ${GITHUB_WORKSPACE}/devenv/flavors/prime/usr/bin
-        VERSION=gmsh_3_0_6 devenv build gmsh
+        VERSION=3.0.6 devenv build gmsh
         echo == prime ==
         ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/
         echo == prime/usr ==
