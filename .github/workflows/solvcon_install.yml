@@ -35,7 +35,7 @@ jobs:
 
     - name: dependency (devenv)
       run: |
-        git clone https://github.com/solvcon/devenv.git
+        git clone https://github.com/tai271828/devenv.git -b dev-solvcon-ci
         source ${GITHUB_WORKSPACE}/devenv/scripts/init
         devenv add prime
         devenv use prime
