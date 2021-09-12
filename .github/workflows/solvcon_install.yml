@@ -35,6 +35,7 @@ jobs:
 
     - name: dependency (devenv)
       run: |
+        echo $(brew --prefix sqlite)
         git clone https://github.com/solvcon/devenv.git
         source ${GITHUB_WORKSPACE}/devenv/scripts/init
         devenv add prime
@@ -67,7 +68,7 @@ jobs:
         echo == prime/usr/include/openssl ==
         ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/usr/include/openssl
 
-        VERSION=3.8 devenv build python
+        CPPFLAGS=-I$(brew --prefix sqlite)/include LDFLAGS=-L$(brew --prefix sqlite)/lib VERSION=3.8 devenv build python
 
     - name: dependency (conda)
       run: |
