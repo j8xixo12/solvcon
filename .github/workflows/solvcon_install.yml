@@ -32,7 +32,43 @@ jobs:
                 liblapack3 liblapack-dev libhdf5-100 libhdf5-dev libnetcdf13 \
                 libnetcdf-dev libscotch-6.0 libscotch-dev cython3 python3 \
                 python3-numpy libpython3.6-dev python3-boto python3-paramiko graphviz
-
+    - name: dependency (macos)
+      if: matrix.os == 'macos-latest'
+      run: |
+        brew install sqlite
+        ls /usr/local/Cellar/sqlite
+     - name: dependency (devenv)
+      run: |
+        git clone https://github.com/tai271828/devenv.git -b dev-solvcon-ci
+        source ${GITHUB_WORKSPACE}/devenv/scripts/init
+        devenv add prime
+        devenv use prime
+        devenv show
+        mkdir -p ${GITHUB_WORKSPACE}/devenv/flavors/prime/usr/bin
+        VERSION=3.0.6 devenv build gmsh
+        # debugging info
+        echo == prime ==
+        ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/
+        echo == prime/usr ==
+        ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/usr
+        echo == prime/usr/bin ==
+        ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/usr/bin
+        echo == prime/usr/bin/gmsh ==
+        ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/usr/bin/gmsh
+        # needed when building python by devenv
+        devenv build openssl
+        # debugging info
+        echo == prime ==
+        ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/
+        echo == prime/usr ==
+        ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/usr
+        echo == prime/usr/bin ==
+        ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/usr/bin
+        echo == prime/usr/lib ==
+        ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/usr/lib
+        echo == prime/usr/include/openssl ==
+        ls ${GITHUB_WORKSPACE}/devenv/flavors/prime/usr/include/openssl
+        VERSION=3.8 devenv build python
     - name: dependency (conda)
       run: |
         if [[ "$(uname)" == "Darwin" ]]; then
